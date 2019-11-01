@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.db import models
+from api.constants import INSERTED, CONSUMED
 
 
 class BaseModel(models.Model):
@@ -17,13 +18,13 @@ class BaseModel(models.Model):
 
 class Workflow(BaseModel):
     STATUS = (
-        ('inserted', 'inserted'),
-        ('consumed', 'consumed'),
+        (INSERTED, 'inserted'),
+        (CONSUMED, 'consumed'),
     )
 
     public_id = models.UUIDField(
         unique=True, default=uuid.uuid4, editable=False)
-    status = models.CharField(default='inserted', max_length=8, choices=STATUS)
+    status = models.CharField(default=INSERTED, max_length=8, choices=STATUS)
     data = JSONField()
     steps = ArrayField(models.CharField(max_length=255, blank=True), size=8)
     created_by = models.ForeignKey(

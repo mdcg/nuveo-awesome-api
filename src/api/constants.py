@@ -1,0 +1,2 @@
+INSERTED = 'inserted'
+CONSUMED = 'consumed'
