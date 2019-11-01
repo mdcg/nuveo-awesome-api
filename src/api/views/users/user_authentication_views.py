@@ -23,7 +23,7 @@ class SignUpView(APIView):
 
             serialized_user_information = UserSerializer(user)
 
-            response_data = {
+            payload = {
                 'status': 'success',
                 'data': {
                     'user': {
@@ -32,13 +32,13 @@ class SignUpView(APIView):
                     },
                 },
             }
-            return Response(response_data, status=status.HTTP_201_CREATED)
+            return Response(payload, status=status.HTTP_201_CREATED)
 
-        response_data = {
+        payload = {
             'status': 'fail',
             'data': user_to_register.errors,
         }
-        return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(payload, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SignInView(APIView):
@@ -47,14 +47,14 @@ class SignInView(APIView):
         password = request.data.get('password', None)
 
         if not username or not password:
-            response_data = {
+            payload = {
                 'status': 'fail',
                 'data': {
                     'username': ['This field is required.'],
                     'password': ['This field is required.'],
                 },
             }
-            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(payload, status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(username=username, password=password)
 
@@ -67,7 +67,7 @@ class SignInView(APIView):
 
             serialized_user_information = UserSerializer(user)
 
-            response_data = {
+            payload = {
                 'status': 'success',
                 'data': {
                     'user': {
@@ -76,10 +76,10 @@ class SignInView(APIView):
                     },
                 },
             }
-            return Response(response_data, status=status.HTTP_200_OK)
+            return Response(payload, status=status.HTTP_200_OK)
 
-        response_data = {
+        payload = {
             'status': 'fail',
             'data': None,
         }
-        return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+        return Response(payload, status=status.HTTP_403_FORBIDDEN)
