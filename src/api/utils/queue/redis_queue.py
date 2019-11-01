@@ -13,8 +13,8 @@ class RedisQueue(object):
 
     def __init__(self, name, namespace='queue', **redis_kwargs):
         """The default connection parameters are: host='localhost', port=6379, db=0"""
-        self.__db = redis.Redis(
-            host=REDIS_URL, port=REDIS_PORT, **redis_kwargs)
+        pool = redis.ConnectionPool(host=REDIS_URL, port=REDIS_PORT, db=0)
+        self.__db = redis.Redis(connection_pool=pool, **redis_kwargs)
         self.key = '%s:%s' % (namespace, name)
 
     def qsize(self):
