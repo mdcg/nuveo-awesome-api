@@ -23,13 +23,13 @@ class Workflow(BaseModel):
 
     public_id = models.UUIDField(
         unique=True, default=uuid.uuid4, editable=False)
-    status = models.CharField(max_length=8, choices=STATUS)
+    status = models.CharField(default='inserted', max_length=8, choices=STATUS)
     data = JSONField()
-    steps = ArrayField(models.CharField(max_length=10, blank=True), size=8)
+    steps = ArrayField(models.CharField(max_length=255, blank=True), size=8)
     created_by = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name='created_workflows')
     produced_by = models.ForeignKey(
-        User, blank=True, null=True, on_delete=models.PROTECT, related_name='produced_workflows')
+        User, on_delete=models.PROTECT, blank=True, null=True, related_name='produced_workflows')
 
     def __str__(self):
         return f'{self.public_id} - {self.status}'
