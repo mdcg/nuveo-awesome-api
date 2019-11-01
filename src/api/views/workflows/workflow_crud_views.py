@@ -10,6 +10,7 @@ from api.models import Workflow
 from api.serializers.workflow_serializers import (WorkflowDetailsSerializer,
                                                   WorkflowRegisterSerializer)
 from api.utils.paginator.custom_paginations import Pagination
+from api.utils.queue.redis_queue import RedisQueue
 
 
 class WorkflowView(APIView):
@@ -25,8 +26,9 @@ class WorkflowView(APIView):
             serialized_workflow = WorkflowDetailsSerializer(
                 workflow)
 
-            # ToDo
-            # queue task in Redis
+            # Queuing
+            q = RedisQueue('workflows')
+            q.put(str(workflow.public_id))
 
             payload = {
                 'status': 'success',
@@ -64,6 +66,8 @@ class WorkflowView(APIView):
 
 
 class WorkflowDetailsView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, workflow_public_id):
         try:
             workflow = Workflow.objects.get(
