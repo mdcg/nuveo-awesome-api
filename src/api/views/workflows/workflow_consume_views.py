@@ -1,6 +1,7 @@
 import uuid
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 from rest_framework import status
@@ -12,6 +13,7 @@ from api.constants import CONSUMED
 from api.models import Workflow
 from api.serializers.workflow_serializers import (WorkflowDetailsSerializer,
                                                   WorkflowRegisterSerializer)
+from api.utils.converter.json_to_csv import export_json_to_csv
 from api.utils.paginator.custom_paginations import Pagination
 from api.utils.queue.redis_queue import RedisQueue
 
@@ -40,19 +42,13 @@ class WorkflowConsumeView(APIView):
             workflow.produced_by = request.user
             workflow.status = CONSUMED
             workflow.save()
-
+            
             # ToDo: Generate CSV from JSON
+            # http://codingpole.com/blog/using-django-rest-framework-for-csv-export/
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="workflow-{workflow_public_id}.csv"'
 
-            serialized_workflow = WorkflowDetailsSerializer(
-                workflow)
-
-            payload = {
-                'status': 'success',
-                'data': {
-                    'workflow': serialized_workflow.data,
-                },
-            }
-            return Response(payload, status=status.HTTP_200_OK)
+            return export_json_to_csv(json_data=workflow.data, response=response)
 
         payload = {
             'status': 'fail',
