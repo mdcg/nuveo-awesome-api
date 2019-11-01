@@ -6,7 +6,7 @@ from api.serializers.user_serializers import UserDetailsSerializer
 class WorkflowRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workflow
-        exclude = ('created_by', 'updated_by')
+        exclude = ('created_by', 'produced_by', 'status')
 
 
 class WorkflowDetailsSerializer(serializers.ModelSerializer):
@@ -21,5 +21,5 @@ class WorkflowDetailsSerializer(serializers.ModelSerializer):
             'data',
             'steps',
             'created_by',
-            'produced_by,'
+            'produced_by',
         )
