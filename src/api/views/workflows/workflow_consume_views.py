@@ -42,7 +42,7 @@ class WorkflowConsumeView(APIView):
             workflow.produced_by = request.user
             workflow.status = CONSUMED
             workflow.save()
-            
+
             # ToDo: Generate CSV from JSON
             # http://codingpole.com/blog/using-django-rest-framework-for-csv-export/
             response = HttpResponse(content_type='text/csv')
