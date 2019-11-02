@@ -44,18 +44,18 @@ To handle the JSON to CSV conversion, the logic I used was to "flatten" as follo
 
 ```javascript
 "data": {
-		"test": {
-			"foo": "bar",
-			"lorem": "ipsum",
-			"buzz": "fizz"
+	"test": {
+		"foo": "bar",
+		"lorem": "ipsum",
+		"buzz": "fizz"
+	},
+	"test_flatten": {
+		"ultricies": {
+			"consectetur": "adipiscing"
 		},
-		"test_flatten": {
-			"ultricies": {
-				"consectetur": "adipiscing"
-			},
-			"dolor": "sit"
-		}
+		"dolor": "sit"
 	}
+}
 ```
 
 Will become:
