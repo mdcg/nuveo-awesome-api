@@ -31,21 +31,18 @@ class UserFactory(factory.DjangoModelFactory):
 
     @classmethod
     def generate_JSON(cls):
-        email = username = factory.LazyAttribute(lambda _: faker.email())
+        email = username = faker.email()
         return {
             'first_name': faker.first_name(),
             'last_name': faker.last_name(),
             'email': email,
             'username': username,
-            'password': factory.PostGenerationMethodCall(
-                'set_password',
-                faker.password(
-                    length=10,
-                    special_chars=True,
-                    digits=True,
-                    upper_case=True,
-                    lower_case=True
-                )
+            'password': faker.password(
+                length=10,
+                special_chars=True,
+                digits=True,
+                upper_case=True,
+                lower_case=True
             )
         }
 
