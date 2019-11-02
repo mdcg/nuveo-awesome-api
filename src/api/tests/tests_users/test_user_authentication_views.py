@@ -7,7 +7,7 @@ from rest_framework.test import APITestCase
 from api.seeds.models import UserFactory
 
 
-class SignInAPITestCase(APITestCase):
+class AuthenticationAPITestCase(APITestCase):
     def setUp(self):
         self.super_secret_password = hashlib.sha256().hexdigest()
         self.user = UserFactory(password=self.super_secret_password)
@@ -55,3 +55,44 @@ class SignInAPITestCase(APITestCase):
 
         self.assertEqual(response.data.get('status'), 'fail')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_signup_post_success(self):
+        url = reverse('signup')
+        payload = UserFactory.generate_JSON()
+        response = self.client.post(url, payload, format='json')
+
+        self.assertEqual(response.data.get('status'), 'success')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_signup_post_fail_non_username_informed(self):
+        url = reverse('signup')
+        payload = {
+            'username': '',
+            'password': hashlib.sha256().hexdigest(),
+        }
+        response = self.client.post(url, payload, format='json')
+
+        self.assertEqual(response.data.get('status'), 'fail')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_signup_post_fail_non_password_informed(self):
+        url = reverse('signup')
+        payload = {
+            'username': self.user.username,
+            'password': '',
+        }
+        response = self.client.post(url, payload, format='json')
+
+        self.assertEqual(response.data.get('status'), 'fail')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_signup_post_fail_username_already_registered(self):
+        url = reverse('signup')
+        payload = {
+            'username': self.user.username,
+            'password': hashlib.blake2b(digest_size=10).hexdigest(),
+        }
+        response = self.client.post(url, payload, format='json')
+
+        self.assertEqual(response.data.get('status'), 'fail')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
