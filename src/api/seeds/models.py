@@ -53,15 +53,15 @@ class WorkflowFactory(factory.DjangoModelFactory):
 
     status = INSERTED
     data = factory.LazyAttribute(lambda _: faker.pylist(
-        nb_elements=10, variable_nb_elements=True, value_types=['str']))
+        10, False, 'str'))
     steps = factory.LazyAttribute(
-        lambda _: faker.pylist(nb_elements=10, variable_nb_elements=True, value_types=['str']))
+        lambda _: faker.pylist(10, False, 'str'))
     created_by = factory.SubFactory(UserFactory)
     produced_by = factory.SubFactory(UserFactory)
 
     @classmethod
     def generate_JSON(cls):
         return {
-            'data': faker.pydict(nb_elements=10, variable_nb_elements=True, value_types=['str']),
-            'steps': faker.pylist(nb_elements=10, variable_nb_elements=True, value_types=['str'])
+            'data': faker.pydict(10, False, 'str'),
+            'steps': faker.pylist(10, False, 'str')
         }
