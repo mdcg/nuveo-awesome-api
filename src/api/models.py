@@ -26,7 +26,7 @@ class Workflow(BaseModel):
         unique=True, default=uuid.uuid4, editable=False)
     status = models.CharField(default=INSERTED, max_length=8, choices=STATUS)
     data = JSONField()
-    steps = ArrayField(models.CharField(max_length=255, blank=True), size=8)
+    steps = ArrayField(models.CharField(max_length=255, blank=True))
     created_by = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name='created_workflows')
     produced_by = models.ForeignKey(
